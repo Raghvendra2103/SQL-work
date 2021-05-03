@@ -1,0 +1,43 @@
+(Question set1):-1. fetch me the name and highest score of each subjects?
+                  2. rank the scorers?
+                  name- ali, mohd, kunal, tej
+                  score- 56,81,62,51(respectively)
+                  subject- phy, chem, phy, chem(respectively)
+
+CREATE TABLE `score` (
+  `name_` varchar(10) DEFAULT NULL,
+  `score` int DEFAULT NULL,
+  `subject_` varchar(10) DEFAULT NULL
+) 
+
+
+SELECT 
+    *
+FROM
+    score
+WHERE
+    (subject_ , score) IN (SELECT 
+            subject_, MAX(score)
+        FROM
+            score
+        GROUP BY subject_);
+        
+        
+SELECT
+	name_, score,
+	RANK () OVER ( 
+		ORDER BY score DESC
+	) 'rank' 
+FROM
+	score;
+    
+-- merge both questions
+
+select*, 
+dense_rank() over(order by subject_) as 'rank'
+from score where (subject_, score) in
+( select subject_, max(score)
+from score
+group by subject_
+);
+    
